@@ -1,0 +1,107 @@
+---
+title: 'Worksheet #3b'
+author: "Grace Anne E. Capanang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+1a. Create a data frame using the table below. Write the codes.
+
+```{r}
+
+Respondents <- seq(1:20)
+Sex <- rep(c(2, 1, 2, 1, 2, 1, 2), c(2, 1, 7, 1, 7, 1, 1))
+Fathers_Occupation <- c(1, 3, 3, 3, 1, 2, 3, 1, 1, 1, 3, 2, 1, 3, 3, 1, 3, 1, 2, 1)
+Persons_at_Home <- c(5, 7, 3, 8, 5, 9, 6, 7, 8, 4, 7, 5, 4, 7, 8, 8, 3, 11, 7, 6 )
+Siblings_at_School <- c(6, 4, 4, 1, 2, 1, 5, 3, 1, 2, 3, 2, 5, 5, 2, 1, 2, 5, 3, 2)
+Types_of_Houses <- c(1, 2, 3, 1, 1, 3, 3, 1, 2, 3, 2, 3, 2, 2, 3, 3, 3, 3, 3, 2)
+
+
+Profile <- data.frame (
+  Respondents,
+  Sex,
+  Fathers_Occupation,
+  Persons_at_Home,
+  Siblings_at_School,
+  Types_of_Houses
+)
+Profile
+
+```
+
+1b. Describe the data. Get the structure or the summary of the data.
+
+#Answer: The data consist of number of respondents and their profile, common important matters regarding to a person's personal profile such as their sex, father's occupation, number of persons at home, siblings they have attending the school, and the type of house they live in. There is a legend which serve as a guide to the variables' data: (1) for the variable 'Sex' number 1 implied to Male and number 2 for Female, (2) for 'Father's Occupation' the number 1 is for Farmer, 2 for Driver and 3 for other professions aside from the two first mentioned, and (3) for the 'Types of Houses' 1 is for house made of Wood, 2 for Semi-concrete, and 3 for Concrete ones.
+
+```{r}
+summary(Profile)
+```
+
+1c Is the mean number of siblings attending is 5?
+```{r}
+siblingsAtSchoolMean <- mean(Siblings_at_School)
+siblingsAtSchoolMean
+```
+#Answer: No, the mean number of siblings attending school is 2.95
+
+1d. Extract the 1st two rows and then all the columns using the subsetting functions. Write the codes and its output.
+```{r}
+Row1stAllCol <- subset(Profile[1:2, 1:6])
+Row1stAllCol
+```
+
+1e. Extract 3rd and 5th row with 2nd and 4th column. Write the codes and its result.
+```{r}
+RowThrFifthColSecoFourth <- subset (Profile[c(3,5), c(2,4)])
+RowThrFifthColSecoFourth
+```
+
+1f. Select the variable types of houses then store the vector that results as types_houses. Write the codes.
+```{r}
+types_houses <- Profile$Types_of_Houses
+types_houses
+```
+
+1g. Select only all Males respondent that their father occupation was farmer. Write the codes and its output.
+```{r}
+farmer <- subset(Profile, Fathers_Occupation == '1')
+farmer
+MalesRespondentFarmerFathers <- subset(farmer, Sex == '1')
+MalesRespondentFarmerFathers
+```
+
+1h. Select only all females respondent that have greater than or equal to 5 number of siblings attending school. Write the codes and its outputs.
+```{r}
+Females_respondent <- subset(Profile, Sex == '2')
+Females_respondent
+FemaleSiblingsMoreThanFive <- subset(Females_respondent, Siblings_at_School >= '5')
+FemaleSiblingsMoreThanFive
+```
+
+#2. Write a R program to create an empty data frame. Using the following codes:
+```{r}
+df <- data.frame (
+  Ints = integer(),
+  Doubles=double(), 
+  Characters = character(),
+  Logicals=logical(),
+  stringsAsFactors = FALSE
+)
+
+print ("Structures of the empty dataframe: ")
+print(str(df))
+```
+2a. Describe the results.
+
+#Answer: The output in this item is: there is no objects inside the data frame. There are four variables namely 'Ints', 'Doubles', 'Characters' and 'Logicals' but there are no data inside them. As it is, an empty dataframe. 
+
+#3. Interpret the graph.
+Answer:
+
+My interpretation of the graph about the tweets' sentiments per day of Donald Trump is that each day the count of negative sentiments dominates; means there is much more negative sentiments than positive and neutrals. And then it was followed by positive, and then neutral in ranking. In conclusion a lot of twitter user does not like Donald Trump as a politician, hence the negative opinions of him.
+
