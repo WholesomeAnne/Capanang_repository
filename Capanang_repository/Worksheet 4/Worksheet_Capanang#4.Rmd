@@ -1,0 +1,141 @@
+---
+title: 'Worksheet #4'
+author: "Grace Anne E. Capanang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#1. The table below shows the data about shoe size and height. Create a data frame..
+
+```{r}
+ShoeSize <- c(6.5, 9.0, 8.5, 8.5, 10.5, 7.0, 9.5, 9.0, 13.0, 7.5, 10.5, 8.5, 12.0, 10.5, 13.0, 
+              11.5, 8.5, 5.0, 10.0, 6.5, 7.5, 8.5, 10.5, 8.5, 10.5, 11.0, 9.0, 13.0)
+ShoeSize
+
+Height <- c(66.0, 68.0, 64.5, 65.0, 70.0, 64.0, 70.0, 71.0, 72.0, 64.0, 74.5, 67.0, 71.0, 71.0, 77.0, 
+            72.0, 59.0, 62.0, 72.0, 66.0, 64.0, 67.0, 73.0, 69.0, 72.0, 70.0, 69.0, 70.0)
+Height
+
+Gender <- rep(c("F", "M", "F", "M", "F", "M", "F", "M", "M", "F", "M", "F", "M", "F", "M"), 
+              c(4, 1, 3, 1, 1, 1, 1, 2, 2, 2, 1, 2, 2, 1, 4))
+Gender
+
+ShoeCustomersProfile <- data.frame (
+  ShoeSize,
+  Height,
+  Gender
+)
+ShoeCustomersProfile
+
+```
+
+#1a. Describe the data.
+
+#1b. Find the mean of shoe size and height of the respondents.
+Copy the codes and results.
+
+```{r}
+shoeSizeMean <- mean(ShoeSize)
+shoeSizeMean
+heightMean <- mean(Height)
+heightMean
+```
+
+#c. Is there a relationship between shoe size and height? Why?
+
+```{r}
+maleOnes <- subset(ShoeCustomersProfile, Gender == "M")
+maleOnes
+maleHeightMean <- mean(maleOnes$Height)
+maleHeightMean
+maleShoeSizeMean <- mean (maleOnes$ShoeSize)
+maleShoeSizeMean
+
+
+FemaleOnes <- subset(ShoeCustomersProfile, Gender == "F")
+FemaleOnes
+FemaleHeightMean <- mean(FemaleOnes$Height)
+FemaleHeightMean
+FemaleShoeSizeMean <- mean (FemaleOnes$ShoeSize)
+FemaleShoeSizeMean
+
+# The result of the code above outputs the mean of each gender's height and shoe size. 
+#For Male,the shoe size' mean is 10.9, and the height's mean is 71.4. 
+#Meanwhile for Female, the shoe size' mean is 7.85, and the height's mean is 65.6. ano konek sa question.
+
+# I filter shoe sizes, one is with equal or less than 9 and the other one is sizes greater than nine. 
+#It shows that people with short height have smaller shoe size meanwhile those taller have bigger size. 
+
+sampleSmallShoeSize <- subset(ShoeCustomersProfile, ShoeSize <= 9)
+sampleSmallShoeSize
+smallSizeMean <- mean(sampleSmallShoeSize$ShoeSize)
+smallSizeMean
+sampleSmallHeightMean <- mean(sampleSmallShoeSize$Height)
+sampleSmallHeightMean
+
+sampleBigShoeSize <- subset(ShoeCustomersProfile, ShoeSize > 9)
+sampleBigShoeSize
+smallBigMean <- mean(sampleBigShoeSize$ShoeSize)
+smallBigMean
+sampleBigHeightMean <- mean(sampleBigShoeSize$Height)
+sampleBigHeightMean
+```
+
+#2. Construct character vector months to a factor with factor() and assign the result to factor_months_vector. Print out factor_months_vector and assert that R prints out the factor levels below the actual values.
+
+```{r}
+months_vector <- c("March","April","January","November","January",
+            "September","October","September","November","August",
+            "January","November","November","February","May","August","July","December","August",
+            "August","September","November","February","April")
+
+months_vector
+
+factor_months_vector <- factor(months_vector)
+factor_months_vector
+```
+
+#3. Then check the summary() of the months_vector and factor_months_vector. Interpret the results of both vectors. Are they both equally useful in this case?
+
+```{r}
+monthsSummary <- summary(months_vector)
+monthsSummary
+
+factoredMonthsSummary <- summary(factor_months_vector)
+factoredMonthsSummary
+```
+
+#4. Create a vector and factor for the table below.
+
+```{r}
+Direction <- c("East", "West", "North")
+Direction
+Frequency <- c(1, 4, 3)
+Frequency
+
+factoredDirection <- factor(Direction)
+factoredDirection
+factoredFrequency <- factor(Frequency)
+factoredFrequency
+
+new_order_data <- factor(Direction,levels = c("East","West","North"))
+print(new_order_data)
+```
+
+#5. Enter the data below in Excel with file name = import_march.csv.  Import the excel file into the Environment Pane using read.table() function. Write the code.
+
+```{r}
+
+readTable <- read.table("C:\\Users\\User\\OneDrive\\Documents\\import_march.csv", header=TRUE, 
+                        sep = ",")
+readTable
+
+readFile <- read.csv("C:\\Users\\User\\OneDrive\\Documents\\import_march.csv")
+View(readFile)
+```
+
