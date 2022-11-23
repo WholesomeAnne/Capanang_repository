@@ -1,0 +1,163 @@
+---
+title: 'RWorksheet #5'
+author: "Grace Anne E. Capanang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1a. Plot the data using a bar graph. Write the codes and copy the result.
+
+```{r}
+Year <- c("1st", "2nd", "3rd", "4th")
+Year
+numberOfEnrolees <- c(80, 75, 70, 60)
+numberOfEnrolees
+
+barplot(numberOfEnrolees,                                       # Add labels to barplot
+        names.arg = Year,
+        col = "pink")
+```
+
+#1b. Using the same table, label the barchart with (1) Title = ” Enrollment of BS Computer Science, (2) horizontal axis = “Curriculum Year” and (3) vertical axis = “number of students”.
+
+```{r}
+barplot(numberOfEnrolees,                                       
+        names.arg = Year,
+        main = "Enrollment of BS Computer Science",
+        xlab = "Curriculum Year",
+        ylab = "number of students",
+        col = "dark blue"
+)
+```
+
+#2a. The monthly income of De Jesus family was spent on the following:
+#60% on Food, 10% on electricity, 5% for savings, and 25% for other miscellaneous expenses.
+
+#Create a table for the above scenario. Write the codes and its result.
+
+```{r}
+expenses <- c("Food", "Electricity", "Savings", "Miscelleneous Expenses")
+howMuch <- c(60, 10, 5, 25)
+
+Expenses <- data.frame(
+  expenses,
+  howMuch
+)
+Expenses
+
+tableExpenses <- table(Expenses)
+tableExpenses
+```
+
+#2b.  Plot the data using a pie chart. Add labels, colors and legend. Write the codes and its result.
+
+```{r}
+library(scales)
+
+equation <- round(howMuch/sum(howMuch) * 1, 2)
+percentage <- percent(equation)
+percentage
+
+pieData <- pie(howMuch,
+                main = "Month Data",
+                col = rainbow(4),
+                labels = percentage,
+                cex = 0.8)
+pieData
+
+legend(1,1, 
+       c("Food", "Electricity", "Savings", "Miscellaneous expenses"),
+       cex = 0.5, 
+       fill = rainbow(4))
+```
+
+#3a. Open the mtcars dataset.Create a simple histogram specifically for mpg (miles per gallon) variable.Use $ to select the mpg only. Write the codes and its result.
+
+```{r}
+data(mtcars)
+
+mpgHistogram <- hist(mtcars$mpg)
+mpgHistogram
+```
+
+
+#3b  Colored histogram with different number of bins.
+
+```{r}
+hist(mtcars$mpg, breaks=12, col="red")
+coloredMpg <- hist(mtcars$mpg, breaks=12, col="red")
+
+```
+
+```{r}
+difNumBins <- hist(mtcars$mpg, breaks=7, col="red")
+
+```
+
+#3c.  Adding a Normal Curve
+
+```{r}
+x <- mtcars$mpg
+h<-hist(x, breaks=10, col="red", xlab="Miles Per Gallon",
+        main="Histogram with Normal Curve")
+xfit<-seq(min(x),max(x),length=40)
+yfit<-dnorm(xfit,mean=mean(x),sd=sd(x))
+yfit <- yfit*diff(h$mids[1:2])*length(x)
+lines(xfit, yfit, col="blue", lwd=2)
+```
+
+#4a. Open the iris dataset. Create a subset for each species. Write the codes and its result.
+
+```{r}
+
+data("iris")
+
+setosaSubset <- subset(iris, Species == 'setosa' )
+setosaSubset
+versicolorSubset <- subset(iris, Species == 'versicolor' )
+versicolorSubset
+virginicaSubset <- subset(iris, Species == 'virginica' )
+virginicaSubset
+```
+
+#4b. Get the mean for every characteristics of each species using colMeans(). Write the codes and its result.
+
+```{r}
+setosa <- colMeans(setosaSubset[sapply(setosaSubset,is.numeric)])
+setosa
+
+versicolor <- colMeans(versicolorSubset[sapply(versicolorSubset,is.numeric)])
+versicolor
+
+virginica <- colMeans(virginicaSubset[sapply(virginicaSubset,is.numeric)])
+virginica
+```
+
+#4c. Combine all species by using rbind().
+
+```{r}
+rbindIrisData <- rbind(setosa, versicolor, virginica)
+rbindIrisData
+```
+
+#4d. From the data in 4-c: Create the barplot(). Write the codes and its result.
+
+```{r}
+barplot(rbindIrisData, 
+        beside = TRUE, 
+        main = "Iris Data",
+        xlab = "Characteristics",
+        ylab = "Mean Scores",
+        col = c("blue", "green", "yellow"),
+        
+)
+```
+
+
+
+
+
