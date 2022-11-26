@@ -1,0 +1,218 @@
+---
+title: 'RWorksheet #6'
+author: "Grace Anne E. Capanang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Use the dataset **mpg**
+
+
+```{r}
+library(ggplot2)
+data("mpg")
+as.data.frame(data(mpg))
+str(mpg)
+library(dplyr)
+glimpse(mpg)
+```
+
+#1. How many columns are in mpg dataset? How about the number of rows? Show the codes and its result.
+
+```{r}
+mpgNumOfCol <- ncol(mpg)
+mpgNumOfCol
+mpgNumOfRows <- nrow(mpg)
+mpgNumOfRows
+
+mpgColRow <- glimpse(mpg)
+mpgColRow
+```
+#The number of rows in mpg dataset is 234, and the number of columns is 11.
+
+
+#2. Which manufacturer has the most models in this data set? Which model has the most variations? Ans:
+
+```{r}
+mostNumberManufacturer <- table(mpg$manufacturer)
+mostNumberManufacturer
+```
+#The manufacturer named 'Dodge' has the most models in the data set, consisting of 37 models. 
+
+```{r}
+mostNumberModel <- table(mpg$model)
+mostNumberModel
+
+anotherMeth <- mpgColRow %>%
+  group_by(model) %>%
+  count()
+anotherMeth
+```
+#The model who has the most variations is the 'caravan 2wd', having 11.
+
+
+#2a. Group the manufacturers and find the unique models. Copy the codes and result.
+
+```{r}
+groupResult <- mpgColRow %>% 
+  group_by(manufacturer, model) %>%
+  distinct() %>% count()
+groupResult
+
+colnames(groupResult) <- c("manufacturer", "model", "counts")
+```
+
+#2b. Graph the result by using plot() and ggplot(). Write the codes and its result.
+
+```{r}
+plot (groupResult)
+
+ggplot(groupResult, 
+       aes(x = manufacturer, y = model)) + 
+  geom_point (color = 'blue')
+```
+
+#3a. Same dataset will be used. You are going to show the relationship of the modeland the manufacturer.  What does ggplot(mpg, aes(model, manufacturer)) + geom_point() show?
+
+```{r}
+ggplot(mpg, aes(model, manufacturer)) + geom_point()
+```
+#The plot shows a scatter plot displaying the relationship between car manufacturer and model of the the mpg data set; a variety of car models and what manufacturer they belong into. 
+
+#3b. For you, is it useful? If not, how could you modify the data to make it more informative?
+
+```{r}
+ggplot(mpg, aes(manufacturer, model)) + geom_count()
+```
+#To make it look more informative and neat, putting the model in the x-axis part is better because there are many of them and if you put them in the y-axis the names become incomprehinsible, thus changing their axis position is a good option.
+# Using geom_count() than geom_point() delivers more information because the size of the dot serves as a guide to the models' count to the manufacturer they are categorized into.
+
+#4. Using the pipe (%>%), group the model and get the number of cars per model. Show codes and its result.
+
+```{r}
+mpgModel <- mpgColRow %>% 
+  group_by(model) %>% count()
+mpgModel
+
+colnames(mpgModel) <- c("model", "counts")
+```
+
+#4a. Plot using the geom_bar() + coord_flip() just like what is shown below. Show codes and its result.
+
+```{r}
+qplot(model,data = mpgColRow, 
+      main = "Number of Cars per Model",
+      xlab = "Model",
+      ylab = "Number of Cars", 
+      geom = "bar", 
+      fill = manufacturer) + coord_flip()
+```
+
+#4b. Plot using the geom_bar() + coord_flip() just like what is shown below. Show codes and its result.
+
+```{r}
+firstTwenty <- mpgModel[1:20,] %>% 
+  top_n(2)
+firstTwenty
+
+ggplot(firstTwenty,
+       aes(x = model, y = counts)) + 
+       geom_bar (stat = "Identity") + coord_flip()
+```
+
+#5a. Plot the relationship between cyl - number of cylinders and displ - engine displacement using geom_point with aesthetic colour = engine displacement. Title should be “Relationship between No. of Cylinders and Engine Displacement”. Show the codes and its result.
+
+```{r}
+ggplot(data = mpgColRow,
+       mapping = aes(x = displ, y = cyl,main = "Relationship Between No. of Cylinders and Engine Displacement")) +
+       geom_point (mapping = aes(colour = "engine displacement"))
+```
+
+#5b. How would you describe its relationship?
+
+#Engine displacement is how the car's engine can powers the car by how much air and fuel it can displace. And larger cylinders means more air.
+#Hence, the relationship between the number of cylinders and the engine displacement is that the greater the number of the cylinder, the bigger the engine displacement, the more power it can create. If the model has smaller number of cylinder, the engine displacement is small too, and the less power it create but also the lesser the fuel it consume.
+
+#6a. Get the total number of observations for drv - type of drive train (f = front-wheel drive, r = rear wheel drive, 4 = 4wd) and class - type of class (Example: suv, 2seater, etc.). Plot using the geom_tile() where the number of observations for class be used as a fill for aesthetics.  Show the codes and its result for the narrative in #6.
+
+```{r}
+ggplot(data = mpgColRow, 
+       mapping = aes(x = drv, y = class)) +
+  geom_tile (aes(fill=class))
+```
+
+#Claire de Lune 
+
+#6b.  Show the codes and its result for the narrative in #6.
+
+#The data shows a tile graph wherein most of the car's class have a 4-wheel drive as type of drive train, and the least of the class' drive train have is the rear-wheel drive. 
+
+#7. Discuss the difference between these codes. Its outputs for each are shown below.
+
+#1st code
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = displ, y = hwy, colour = "blue"))
+```
+
+#2nd code
+```{r}
+ggplot(data = mpg) +
+   geom_point(mapping = aes(x = displ, y = hwy), colour = "blue")
+```
+
+#The difference between the two code is the color of the geom point. In the first code the colour did not apply to the graph.
+#While in the second code the colour 'blue' is successfully used as a guide to the graph. 
+#In the code, the colour must be not inside the aesthetic in order for it to be successfully use in the graph we'll make.
+
+#8. Try to run the command ?mpg. What is the result of this command?
+
+```{r, fig.cap="A caption", out.width = '100%'}
+?mpg
+
+	knitr::include_graphics("mpg1.jpg")
+
+  knitr::include_graphics("mpg2.jpg")
+
+  knitr::include_graphics("mpg3.jpg")
+```
+
+#8a. Which variables from mpg dataset are categorical?
+
+#The manufacturer, model, trans, drv, fl, and class are the categorical variable from the dataset because they are characters which values are limited and specific. 
+
+#8b. Which are continuous variables?
+
+#The displ, year, cyl, cty, and hwy are the continous variable because they are numeric and have infinite values which you cannot categorize.
+
+#8c. Plot the relationship between displ (engine displacement) and hwy(highway miles per gallon). Mapped it with a continuous variable you have identified in #5-b. What is its result? Why it produced such output?
+
+```{r}
+ggplot(data = mpgColRow,
+       mapping = aes(x = displ, y = hwy)) +
+  geom_point (mapping = aes(colour = "displ"))
+```
+#The plot reveals the relationship between the car's engine displacement and the highway per gallons it consume.  
+
+#9. Plot the relationship between displ (engine displacement) and hwy(highway miles per gallon). Mapped it with a continuous variable you have identified in #5-b. What is its result? Why it produced such output?
+
+```{r}
+ggplot(data = mpgColRow, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping=aes(color=class)) +
+  geom_smooth(se = FALSE)
+```
+
+#10. Plot the relationship between displ (engine displacement) and hwy(highway miles per gallon). Mapped it with a continuous variable you have identified in #5-b. What is its result? Why it produced such output?
+
+```{r}
+ggplot(data = mpgColRow, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping=aes(color=class)) +
+  geom_smooth(se = FALSE, method = lm)
+```
+
+
