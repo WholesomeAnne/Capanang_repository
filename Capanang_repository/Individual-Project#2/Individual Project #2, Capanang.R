@@ -1,0 +1,90 @@
+#DATA SCIENCE - CS101
+
+  #INDIVIDUAL PROJECT #2
+  #Grace Anne Capanang BSIT-2A
+  
+library(plotly)
+library(tm)
+library(ggplot2)
+library(twitteR)
+library(dplyr)
+library(rtweet)
+
+CONSUMER_KEY <- "keJy8ZjWZUNLx5waAIXnMKqkM"
+CONSUMER_SECRET <- "TjtCidpOXtnjN4Bk5biJ3TpnnS5uatuaTMwBc01QiNPOGWuo5W"
+ACCESS_TOKEN <- "1592474750000865282-IzNkw4GOx9XZA9bwRObofstbeOW2Os"
+ACCESS_SECRET <- "qUcG8hpyiSaxzuDFy5tI4uMOoRUplN6p2Q58JV53Jb4SP"
+
+setup_twitter_oauth(consumer_key = CONSUMER_KEY,
+                    consumer_secret = CONSUMER_SECRET,
+                    access_token = ACCESS_TOKEN,
+                    access_secret = ACCESS_SECRET)
+
+
+secTweets <- searchTwitter("fifa argentina", 
+                               n=10000, 
+                               since = "2022-12-01", 
+                               until = "2022-12-08",
+                               lang = "en", 
+                               retryOnRateLimit = 120) 
+
+
+secTweetsDF <- twListToDF(secTweets)
+class(secTweetsDF)
+names(secTweetsDF)
+View(secTweetsDF)
+head(secTweetsDF)[1:5]
+head(secTweetsDF$text)[1:5]
+
+
+secTweetsDF %>%  
+  group_by(1) %>%  
+  summarise(max = max(created), min = min(created))
+
+#tweets including the retweets
+
+ggplot(data = secTweetsDF, aes(x = created)) +
+  geom_histogram(aes(fill = ..count..)) +
+  theme(legend.position = "right") +
+  xlab("Date") + ylab("Number of tweets including retweets") + 
+  scale_fill_gradient(low = "violet", high = "purple")
+
+ts_plot(secTweetsDF, "hours") +
+  labs(x = NULL, y = NULL,
+       title = "Frequency of tweets of fifa argentina (retweets included)",
+       subtitle = paste0(format(min(secTweetsDF$created), "%d %B %Y"), " to ", 
+                         format(max(secTweetsDF$created),"%d %B %Y")),
+       caption = "Data collected from Twitter's REST API via twitteR of 'fifa spain' in a week") +
+  theme_classic()
+
+
+#subsetting retweets
+
+tweetsExcludeRetweetsDF <- secTweetsDF %>%
+  select(screenName,text,created,statusSource, isRetweet) %>%
+  filter(isRetweet == "FALSE")
+
+#saving file as Rdata
+save(tweetsExcludeRetweetsDF, file = "tweetsExcludeRetweets.Rdata")
+
+tweetsExcludeRetweetsDF %>%  
+  group_by(1) %>%  
+  summarise(max = max(created), min = min(created))
+
+#tweets excluding the retweets
+
+ggplot(data = tweetsExcludeRetweetsDF, aes(x = created)) +
+  geom_histogram(aes(fill = ..count..)) +
+  theme(legend.position = "right") +
+  xlab("Date") + ylab("Number of tweets excluding retweets") + 
+  scale_fill_gradient(low = "purple", high = "darkorange")
+
+ts_plot(tweetsExcludeRetweetsDF, "hours") +
+  labs(x = NULL, y = NULL,
+       title = "Frequency of tweets of fifa argentina (retweets excluded)",
+       subtitle = paste0(format(min(secTweetsDF$created), "%d %B %Y"), " to ", 
+                         format(max(secTweetsDF$created),"%d %B %Y")),
+       caption = "Data collected from Twitter's REST API via twitteR of 'fifa spain' in a week") +
+  theme_classic()
+
+
